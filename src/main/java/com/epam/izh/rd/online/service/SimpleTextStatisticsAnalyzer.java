@@ -23,7 +23,11 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countSumLengthOfWords(String text) {
-        return 0;
+        int sumLengthOfWords = 0;
+        for (String string : getWords(text)) {
+            sumLengthOfWords += string.length();
+        }
+        return sumLengthOfWords;
     }
 
     /**
@@ -34,7 +38,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfWords(String text) {
-        return 0;
+        return getWords(text).size();
     }
 
     /**
@@ -44,7 +48,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public int countNumberOfUniqueWords(String text) {
-        return 0;
+        return getUniqueWords(text).size();
     }
 
     /**
@@ -57,7 +61,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> getWords(String text) {
-        return emptyList();
+        return text == null ? emptyList() : Arrays.asList(text.split("\\P{LD}+"));
     }
 
     /**
@@ -70,7 +74,7 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Set<String> getUniqueWords(String text) {
-        return emptySet();
+        return new HashSet<>(getWords(text));
     }
 
     /**
@@ -82,7 +86,11 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public Map<String, Integer> countNumberOfWordsRepetitions(String text) {
-        return emptyMap();
+        Map<String, Integer> map = new HashMap<>();
+        for (String string : getWords(text)) {
+            map.merge(string, 1, Integer::sum);
+        }
+        return map;
     }
 
     /**
@@ -95,6 +103,13 @@ public class SimpleTextStatisticsAnalyzer implements TextStatisticsAnalyzer {
      */
     @Override
     public List<String> sortWordsByLength(String text, Direction direction) {
-        return emptyList();
+        List<String> sortedList = new ArrayList<>(getWords(text));
+        if (direction == Direction.ASC) {
+            sortedList.sort(Comparator.comparingInt(String::length));
+        }
+        if (direction == Direction.DESC) {
+            sortedList.sort(Comparator.comparingInt(String::length).reversed());
+        }
+        return sortedList;
     }
 }
